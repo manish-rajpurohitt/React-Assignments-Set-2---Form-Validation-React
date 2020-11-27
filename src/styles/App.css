@@ -9,4 +9,13 @@ button{
     text-align: center;
     justify-content: center;
     align-items: center;
+    width:30px;
+}
+
+label{
+    margin:10px;
+}
+form{
+    display: flex;
+    flex-direction: column;
 }

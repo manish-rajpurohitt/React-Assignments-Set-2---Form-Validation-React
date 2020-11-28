@@ -15,7 +15,7 @@ button{
 label{
     margin:10px;
 }
-form{
+#main{
     display: flex;
     flex-direction: column;
 }

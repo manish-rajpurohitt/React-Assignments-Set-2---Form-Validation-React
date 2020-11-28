@@ -13,8 +13,8 @@ const App = () => {
   const [validatedState,setvalidatedState] = React.useState(false);
   const [message,setMessage] = React.useState("");
 
-  const handleSubmit= (event)=>{
-    event.preventDefault();
+  const handleSubmit= ()=>{
+    
     console.log(formState);
     if(formState.name === "" || formState.email === "" ||
         formState.password === "" || formState.phone === "" || formState.gender === ""){
@@ -36,7 +36,7 @@ const App = () => {
   }
   return (
     <div id="main">
-      <form onSubmit={()=>handleSubmit(event)}>
+      
        <label>
           Name:{" "}
           <input  
@@ -77,12 +77,11 @@ const App = () => {
             value={formState.password} 
             onChange={(e)=>setFormState({...formState,password:e.target.value})} />
         </label>
-        <input 
+        <button 
           data-testid = 'submit'
           type="submit" 
-          value="Submit" />
-      </form>
-  
+          value="Submit"
+          onClick={handleSubmit} >Submit</button>
   <p>{message}</p>
     </div>
   )

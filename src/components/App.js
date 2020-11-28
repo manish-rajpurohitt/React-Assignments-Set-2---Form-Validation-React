@@ -11,25 +11,35 @@ const App = () => {
   }
   const [formState,setFormState] = React.useState(st);
   const [validatedState,setvalidatedState] = React.useState(false);
+  const [message,setMessage] = React.useState("");
 
   const handleSubmit= (event)=>{
     event.preventDefault();
-    console.log(event.target);
-    if(formState.length === 0){
+    console.log(formState);
+    if(formState.name === "" || formState.email === "" ||
+        formState.password === "" || formState.phone === "" || formState.gender === ""){
+      setMessage("All fields are mandatory");
       return;
+    }else if(!formState.name.match(/^[a-zA-Z0-9_ ]*$/)){
+      setMessage("Name is not alphanumeric");
+    }else if(!formState.email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]/)){
+      setMessage("Email must contain @");
+    }else if(formState.gender !== "male" && formState.gender !== "female" && formState.gender !== "others"){
+      setMessage("Please identify as male, female or others")
+    }else if(!formState.phone.match(/^[0-9]*$/)){
+      setMessage("Phone Number must contain only numbers");
+    }else if(formState.password.length < 6){
+      setMessage("Password must contain atleast 6 letters");
+    }else {
+      setMessage(`Hello ${formState.email.split('@')[0]}`);
     }
-    setvalidatedState(true);
   }
   return (
     <div id="main">
       <form onSubmit={()=>handleSubmit(event)}>
        <label>
-          Name:
-          <input 
-            pattern={`^[a-zA-Z0-9 ]*$`}
-            onInvalid={(e)=>{setvalidatedState(false); e.target.setCustomValidity('Name is not alphanumeric')}}
-            onInput={(e)=>e.target.setCustomValidity('')} 
-            required 
+          Name:{" "}
+          <input  
             type="text" 
             value={formState.name} 
             onChange={(e)=>setFormState({...formState,name:e.target.value})} 
@@ -37,11 +47,8 @@ const App = () => {
         </label>
         <label>
           Email:
-          <input 
-            onInvalid={(e)=>{setvalidatedState(false); e.target.setCustomValidity('Email must contain @')}}
-            onInput={(e)=>e.target.setCustomValidity('')} 
-            required 
-            type="email" 
+          <input  
+            type="text" 
             value={formState.email} 
             onChange={(e)=>setFormState({...formState,email:e.target.value})}
             data-testid = 'email' />
@@ -50,31 +57,15 @@ const App = () => {
           Gender:
           <input 
             data-testid = 'gender'
-            type="radio" 
-            value="male" 
-            checked={formState.gender==="male" ? true:false} 
-            onChange={(e)=>setFormState({...formState,gender:"male"})} />Male
-          <input 
-            data-testid = 'gender'
-            type="radio" 
-            value="female" 
-            checked={formState.gender==="female" ? true:false} 
-            onChange={(e)=>setFormState({...formState,gender:"female"})} /> Female
-          <input 
-            data-testid = 'gender'
-            type="radio" 
-            value="female" 
-            checked={formState.gender==="other" ? true:false} 
-            onChange={(e)=>setFormState({...formState,gender:"other"})} /> Other
+            type="text" 
+            value={formState.gender}
+            onChange={(e)=>setFormState({...formState,gender:e.target.value})} />
         </label>
         <label>
           Phone Number:
           <input 
             data-testid = 'phoneNumber'
-            onInvalid={(e)=>{setvalidatedState(false); e.target.setCustomValidity('Phone Number must contain only numbers')}}
-            onInput={(e)=>e.target.setCustomValidity('')} 
-            required 
-            type="number" 
+            type="text" 
             value={formState.phone} 
             onChange={(e)=>setFormState({...formState,phone:e.target.value})} />
         </label>
@@ -83,10 +74,6 @@ const App = () => {
           <input 
             data-testid = 'password'
             type='password'
-            minLength={6}
-            onInvalid={(e)=>{setvalidatedState(false); e.target.setCustomValidity('Password must contain atleast 6 letters')}}
-            onInput={(e)=>e.target.setCustomValidity('')} 
-            required 
             value={formState.password} 
             onChange={(e)=>setFormState({...formState,password:e.target.value})} />
         </label>
@@ -95,7 +82,8 @@ const App = () => {
           type="submit" 
           value="Submit" />
       </form>
-  {validatedState?<h1>Hello {formState.email.split('@')[0]}</h1>:""}
+  
+  <p>{message}</p>
     </div>
   )
 }
